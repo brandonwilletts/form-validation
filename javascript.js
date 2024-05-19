@@ -33,50 +33,79 @@ function checkPassword() {
   return result;
 }
 
-function checkAllInputs() {
-  if (checkEmail() && checkZip() && checkPassword() && checkPasswordConfirm()) {
-    return true;
-  } else {
-    return false;
+function renderInvalid(input) {
+  const error = input.nextElementSibling;
+  input.setCustomValidity("invalid");
+  switch (input) {
+    case emailInput:
+      error.textContent = "Please enter a valid email address";
+      break;
+    case zipInput:
+      error.textContent = "Please enter a valid zip code";
+      break;
+    case passwordInput:
+      error.textContent = "Please enter a valid password";
+      break;
+    case passwordConfirmInput:
+      error.textContent = "Passwords do not match";
+      break;
+    default:
+      error.textContent = "Error";
+      break;
   }
 }
 
+function renderValid(input) {
+  const error = input.nextElementSibling;
+  input.setCustomValidity("");
+  error.textContent = "";
+}
+
+function checkAndRenderAllInputs() {
+  let result = true;
+  const emailValid = checkEmail();
+  const zipValid = checkZip();
+  const passwordValid = checkPassword();
+  const passwordConfirmValid = checkPasswordConfirm();
+
+  emailValid ? renderValid(emailInput) : renderInvalid(emailInput);
+  zipValid ? renderValid(zipInput) : renderInvalid(zipInput);
+  passwordValid ? renderValid(passwordInput) : renderInvalid(passwordInput);
+  passwordConfirmValid
+    ? renderValid(passwordConfirmInput)
+    : renderInvalid(passwordConfirmInput);
+
+  !emailValid || !zipValid || !passwordValid || !passwordConfirmValid
+    ? (result = false)
+    : null;
+  return result;
+}
+
 emailInput.addEventListener("input", (event) => {
-  if (checkEmail()) {
-    console.log("Valid");
-  } else {
-    console.log("Invalid");
-  }
+  checkEmail() ? renderValid(emailInput) : renderInvalid(emailInput);
 });
 
 zipInput.addEventListener("input", (event) => {
-  if (checkZip()) {
-    console.log("Valid");
-  } else {
-    console.log("Invalid");
-  }
+  checkZip() ? renderValid(zipInput) : renderInvalid(zipInput);
 });
 
 passwordInput.addEventListener("input", (event) => {
-  if (checkPassword()) {
-    console.log("Valid");
-  } else {
-    console.log("Invalid");
-  }
+  checkPassword() ? renderValid(passwordInput) : renderInvalid(passwordInput);
 });
 
 passwordConfirmInput.addEventListener("input", (event) => {
-  if (checkPasswordConfirm()) {
-    console.log("Valid");
-  } else {
-    console.log("Invalid");
-  }
+  checkPasswordConfirm()
+    ? renderValid(passwordConfirmInput)
+    : renderInvalid(passwordConfirmInput);
 });
 
 form.addEventListener("submit", (event) => {
-  if (checkAllInputs()) {
-    console.log("Success");
+  event.preventDefault();
+  const success = document.querySelector(".success");
+  if (checkAndRenderAllInputs()) {
+    success.textContent = "Success!";
+    form.reset();
   } else {
-    console.log("Error");
+    success.textContent = "";
   }
 });

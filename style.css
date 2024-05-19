@@ -1,0 +1,20 @@
+:root {
+  --error: red;
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+input:valid {
+  border: 1px solid black;
+}
+
+input:invalid {
+  border: 1px solid var(--error);
+}
+
+.error {
+  color: var(--error);
+}
