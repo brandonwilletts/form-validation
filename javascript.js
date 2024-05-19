@@ -103,9 +103,11 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const success = document.querySelector(".success");
   if (checkAndRenderAllInputs()) {
-    success.textContent = "Success!";
+    success.style.cssText = "padding: 16px;";
+    success.textContent = "Form submitted!";
     form.reset();
   } else {
+    success.style.cssText = "padding: 0px;";
     success.textContent = "";
   }
 });
